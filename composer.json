@@ -5,8 +5,13 @@
     "license": "MIT",
     "type": "project",
     "require": {
-        "php": "^7.3|^8.0",
-        "laravel/lumen-framework": "^8.3.1"
+        "php": "^8.0",
+        "laravel/lumen-framework": "^8.3.1",
+        "flipbox/lumen-generator": "^8.2",
+        "illuminate/redis": "^8.28",
+        "irazasyed/larasupport": "^1.7",
+        "predis/predis": "^1.1",
+        "tymon/jwt-auth": "dev-develop"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
@@ -18,7 +23,10 @@
             "App\\": "app/",
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/"
-        }
+        },
+        "files": [
+            "app/Helpers/functions.php"
+        ]
     },
     "autoload-dev": {
         "classmap": [

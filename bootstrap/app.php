@@ -1,10 +1,8 @@
 <?php
 
-require_once __DIR__.'/../vendor/autoload.php';
+require_once __DIR__ . '/../vendor/autoload.php';
 
-(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
-    dirname(__DIR__)
-))->bootstrap();
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(dirname(__DIR__)))->bootstrap();
 
 date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 
@@ -19,13 +17,11 @@ date_default_timezone_set(env('APP_TIMEZONE', 'UTC'));
 |
 */
 
-$app = new Laravel\Lumen\Application(
-    dirname(__DIR__)
-);
+$app = new Laravel\Lumen\Application(dirname(__DIR__));
 
-// $app->withFacades();
+$app->withFacades();
 
-// $app->withEloquent();
+$app->withEloquent();
 
 /*
 |--------------------------------------------------------------------------
@@ -38,15 +34,9 @@ $app = new Laravel\Lumen\Application(
 |
 */
 
-$app->singleton(
-    Illuminate\Contracts\Debug\ExceptionHandler::class,
-    App\Exceptions\Handler::class
-);
+$app->singleton(Illuminate\Contracts\Debug\ExceptionHandler::class, App\Exceptions\Handler::class);
 
-$app->singleton(
-    Illuminate\Contracts\Console\Kernel::class,
-    App\Console\Kernel::class
-);
+$app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -60,6 +50,8 @@ $app->singleton(
 */
 
 $app->configure('app');
+$app->configure('jwt');
+$app->configure('repositories');
 
 /*
 |--------------------------------------------------------------------------
@@ -76,9 +68,13 @@ $app->configure('app');
 //     App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'auth' => App\Http\Middleware\Authenticate::class,
+    'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
+    'throttle' => App\Http\Middleware\ThrottleRequests::class,
+    'throttleWithRedis' => App\Http\Middleware\ThrottleRequestsWithRedis::class,
+    'role' => \App\Http\Middleware\RoleMiddleware::class,
+]);
 
 /*
 |--------------------------------------------------------------------------
@@ -91,9 +87,26 @@ $app->configure('app');
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
-// $app->register(App\Providers\AuthServiceProvider::class);
-// $app->register(App\Providers\EventServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
+$app->register(App\Providers\EventServiceProvider::class);
+
+$app->register(\Illuminate\Redis\RedisServiceProvider::class);
+$app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(\App\Support\Repository\RepositoryServiceProvider::class);
+
+if(env('APP_ENV') === 'local'){
+    $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
+    $app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
+}
+
+$app->bind(\App\Repositories\Interfaces\AddressRepositoryInterface::class, \App\Repositories\Eloquent\AddressRepository::class);
+$app->bind(\App\Repositories\Interfaces\PermissionRepositoryInterface::class, \App\Repositories\Eloquent\PermissionRepository::class);
+$app->bind(\App\Repositories\Interfaces\ProductRepositoryInterface::class, \App\Repositories\Eloquent\ProductRepository::class);
+$app->bind(\App\Repositories\Interfaces\ReceiptRepositoryInterface::class, \App\Repositories\Eloquent\ReceiptRepository::class);
+$app->bind(\App\Repositories\Interfaces\RoleRepositoryInterface::class, \App\Repositories\Eloquent\RoleRepository::class);
+$app->bind(\App\Repositories\Interfaces\StoreRepositoryInterface::class, \App\Repositories\Eloquent\StoreRepository::class);
+$app->bind(\App\Repositories\Interfaces\UserRepositoryInterface::class, \App\Repositories\Eloquent\UserRepository::class);
 
 /*
 |--------------------------------------------------------------------------
@@ -109,7 +122,20 @@ $app->configure('app');
 $app->router->group([
     'namespace' => 'App\Http\Controllers',
 ], function ($router) {
-    require __DIR__.'/../routes/web.php';
+    $router->group([
+        'namespace' => 'Api',
+        'prefix' => 'api'
+    ], function ($router) {
+        $router->group([
+            'namespace' => 'V1',
+            'prefix' => 'v1',
+        ], function ($router) {
+            require __DIR__ . '/../routes/api_v1.php';
+        });
+    });
+
+    require __DIR__ . '/../routes/web.php';
 });
+
 
 return $app;

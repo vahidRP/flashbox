@@ -1,17 +1,17 @@
-version: "3.8"
+version: "3.9"
 services:
   flashbox_app:
     container_name: flashbox_app
     build:
       context: .
-      dockerfile: ./docker/php/Dockerfile
-    expose:
-      - 9000
+      dockerfile: ./docker/php/Dockerfile.dev
+    restart: always
     volumes:
       - .:/usr/src/app
-      - ./public:/usr/src/app/public
+    #      - ./public:/usr/src/app/public
     depends_on:
       - flashbox_db
+      - flashbox_redis
     networks:
       - flashbox_network
     extra_hosts:
@@ -21,7 +21,8 @@ services:
     container_name: flashbox_nginx
     build:
       context: .
-      dockerfile: ./docker/nginx/Dockerfile
+      dockerfile: ./docker/nginx/Dockerfile.dev
+    restart: always
     volumes:
       - ./public:/usr/src/app/public
     ports:
@@ -30,7 +31,6 @@ services:
       - flashbox_app
     environment:
       NGINX_FPM_HOST: flashbox_app
-      NGINX_ROOT: /usr/src/app/public
     networks:
       - flashbox_network
     extra_hosts:
@@ -50,9 +50,36 @@ services:
     networks:
       - flashbox_network
 
+  flashbox_phpmyadmin:
+    container_name: flashbox_phpmyadmin
+    image: phpmyadmin
+    restart: always
+    environment:
+      #      PMA_ARBITRARY: 1
+      PMA_HOST: flashbox_db
+      PMA_USER: root
+      PMA_PASSWORD: root
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_PASSWORD: root
+    depends_on:
+      - flashbox_db
+    networks:
+      - flashbox_network
+
   flashbox_redis:
     container_name: flashbox_redis
     image: redis:latest
+    networks:
+      - flashbox_network
+
+  flashbox_phpredisadmin:
+    container_name: flashbox_phpredisadmin
+    image: erikdubbelboer/phpredisadmin
+    restart: always
+    environment:
+      REDIS_1_HOST: flashbox_redis
+    depends_on:
+      - flashbox_redis
     networks:
       - flashbox_network
 

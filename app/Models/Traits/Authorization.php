@@ -38,6 +38,31 @@ trait Authorization {
         return false;
     }
 
+    public function hasRole(array|string $role, bool $requireAll = false)
+    {
+        if(is_array($role)){
+            foreach($role as $roleName){
+                $hasRole = $this->hasRole($roleName);
+
+                if($hasRole && !$requireAll){
+                    return true;
+                }elseif(!$hasRole && $requireAll){
+                    return false;
+                }
+            }
+
+            // If we've made it this far and $requireAll is FALSE, then NONE of the perms were found
+            // If we've made it this far and $requireAll is TRUE, then ALL of the perms were found.
+            // Return the value of $requireAll;
+            return $requireAll;
+        }else{
+            if($this->roles->where('identity', $role)->first()){
+                return true;
+            }
+        }
+        return false;
+    }
+
     /**
      * @return array
      */

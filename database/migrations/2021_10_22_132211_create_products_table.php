@@ -15,7 +15,7 @@ class CreateProductsTable extends Migration
     {
         Schema::create('products', function (Blueprint $table) {
             $table->id();
-            $table->foreignIdFor(\App\Models\User::class)->index();
+            $table->foreignIdFor(\App\Models\Store::class)->index();
             $table->string('title')->nullable();
             $table->unsignedDecimal('price', 15, 4)->default(0);
             $table->unsignedInteger('capacity')->default(0);

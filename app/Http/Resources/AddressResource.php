@@ -2,7 +2,7 @@
 
 namespace App\Http\Resources;
 
-class UserResource extends Resource
+class AddressResource extends Resource
 {
     /**
      * {@inheritdoc}

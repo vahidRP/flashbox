@@ -1,0 +1,14 @@
+<?php
+
+namespace {{repositoryInterfaceNamespace}};
+
+use App\Support\Repository\Contracts\RepositoryInterface;
+
+/**
+ * Interface {{repositoryInterfaceName}}
+ * @package {{repositoryInterfaceNamespace}}
+ */
+interface {{repositoryInterfaceName}} extends RepositoryInterface
+{
+   // Nothing
+}

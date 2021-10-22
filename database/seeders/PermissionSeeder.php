@@ -53,26 +53,24 @@ class PermissionSeeder extends Seeder
         $finder->files()->in(base_path() . '/' . $path);
 
         foreach($finder as $file){
-            $ns = $namespace;
-            if($relativePath = $file->getRelativePath()){
-                $ns .= '\\' . strtr($relativePath, '/', '\\');
-            }
-            $baseName = $file->getBasename('.php');
-            $class = $ns . '\\' . $baseName;
+            if(empty($file->getRelativePath())){
+                $baseName = $file->getBasename('.php');
+                $class = $namespace . '\\' . $baseName;
 
-            if((new ReflectionClass($class))->isInstantiable()){
-                $actions = [
-                    'create',
-                    'read',
-                    'update',
-                    'delete',
-                ];
-
-                foreach($actions as $action){
-                    $permissions[] = [
-                        'title'    => ucfirst($action) . " {$baseName}",
-                        'identity' => (Str::snake(Str::pluralStudly($baseName)) . ".{$action}")
+                if((new ReflectionClass($class))->isInstantiable()){
+                    $actions = [
+                        'create',
+                        'read',
+                        'update',
+                        'delete',
                     ];
+
+                    foreach($actions as $action){
+                        $permissions[] = [
+                            'title'    => ucfirst($action) . " {$baseName}",
+                            'identity' => (Str::snake(Str::pluralStudly($baseName)) . ".{$action}")
+                        ];
+                    }
                 }
             }
         }

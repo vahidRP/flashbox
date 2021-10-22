@@ -14,5 +14,8 @@
 */
 
 $router->get('/', function () use ($router) {
+    $user = \App\Models\User::where('email', 'admin@flashbox.com')->first();
+    \Illuminate\Support\Facades\Auth::login($user);
+    dd(\Illuminate\Support\Facades\Gate::has('super-admin'));
     return $router->app->version();
 });

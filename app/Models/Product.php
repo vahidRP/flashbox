@@ -3,6 +3,9 @@
 namespace App\Models;
 
 use App\Models\Base\Model;
+use App\Models\Pivots\ProductReceipt;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Product extends Model
@@ -38,5 +41,18 @@ class Product extends Model
     /*=================================================
      **************** Relation Methods ****************
      =================================================*/
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function receipts(): BelongsToMany
+    {
+        return $this->belongsToMany(Receipt::class)
+            ->using(ProductReceipt::class)
+            ->withTimestamps()
+            ->withPivot((new ProductReceipt())->getFillable());
+    }
 
 }

@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use App\Models\Base\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Store extends Model
@@ -35,5 +37,15 @@ class Store extends Model
     /*=================================================
      **************** Relation Methods ****************
      =================================================*/
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
+
+    public function addresses(): MorphOne
+    {
+        return $this->morphOne(Address::class, Address::USERABLE_KEY);
+    }
 
 }

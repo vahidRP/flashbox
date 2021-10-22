@@ -1,0 +1,61 @@
+version: "3.8"
+services:
+  flashbox_app:
+    container_name: flashbox_app
+    build:
+      context: .
+      dockerfile: ./docker/php/Dockerfile
+    expose:
+      - 9000
+    volumes:
+      - .:/usr/src/app
+      - ./public:/usr/src/app/public
+    depends_on:
+      - flashbox_db
+    networks:
+      - flashbox_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  flashbox_nginx:
+    container_name: flashbox_nginx
+    build:
+      context: .
+      dockerfile: ./docker/nginx/Dockerfile
+    volumes:
+      - ./public:/usr/src/app/public
+    ports:
+      - "8010:80"
+    depends_on:
+      - flashbox_app
+    environment:
+      NGINX_FPM_HOST: flashbox_app
+      NGINX_ROOT: /usr/src/app/public
+    networks:
+      - flashbox_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  flashbox_db:
+    container_name: flashbox_db
+    image: mariadb:10.6
+    restart: always
+    volumes:
+      - ./storage/db-data:/var/lib/mysql
+    environment:
+      MYSQL_DATABASE: flashbox
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: root
+      MYSQL_PASSWORD: root
+    networks:
+      - flashbox_network
+
+  flashbox_redis:
+    container_name: flashbox_redis
+    image: redis:latest
+    networks:
+      - flashbox_network
+
+networks:
+  flashbox_network:
+    driver: bridge

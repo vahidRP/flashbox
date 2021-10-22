@@ -21,10 +21,23 @@ $router->group(['middleware' => ['auth:api', 'throttleWithRedis:120,1']], functi
         $router->get('me', 'AuthController@me');
     });
 
+    $router->group(['middleware' => 'role:admin'], function($router){
+
+    });
+
+    $router->group(['middleware' => 'role:seller'], function($router){
+
+    });
+
+    $router->group(['middleware' => 'role:customer'], function($router){
+
+    });
+
 });
 
 $router->group(['middleware' => ['guest']], function(Router $router){
     $router->group(['middleware' => 'throttleWithRedis:20,1'], function(Router $router){
         $router->post('auth/login', 'AuthController@login');
     });
+
 });

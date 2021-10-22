@@ -72,6 +72,7 @@ $app->routeMiddleware([
     'guest' => \App\Http\Middleware\RedirectIfAuthenticated::class,
     'throttle' => App\Http\Middleware\ThrottleRequests::class,
     'throttleWithRedis' => App\Http\Middleware\ThrottleRequestsWithRedis::class,
+    'role' => \App\Http\Middleware\RoleMiddleware::class,
 ]);
 
 /*

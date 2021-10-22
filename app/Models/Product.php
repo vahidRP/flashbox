@@ -24,7 +24,7 @@ class Product extends Model
      * {@inheritdoc}
      */
     protected $fillable = [
-        'user_id',
+        'store_id',
         'title',
         'price'
     ];
@@ -33,7 +33,7 @@ class Product extends Model
      * {@inheritdoc}
      */
     protected $casts = [
-        'user_id' => 'integer',
+        'store_id' => 'integer',
         'title' => 'string',
         'price' => 'decimal:15',
     ];
@@ -42,9 +42,9 @@ class Product extends Model
      **************** Relation Methods ****************
      =================================================*/
 
-    public function user(): BelongsTo
+    public function store(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Store::class);
     }
 
     public function receipts(): BelongsToMany

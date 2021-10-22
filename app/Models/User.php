@@ -86,19 +86,9 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
      **************** Relation Methods ****************
      =================================================*/
 
-    public function addresses(): MorphOne
+    public function address(): MorphOne
     {
         return $this->morphOne(Address::class, Address::USERABLE_KEY);
-    }
-
-    /**
-     * Products which belongs to seller
-     *
-     * @return HasMany
-     */
-    public function products(): HasMany
-    {
-        return $this->hasMany(Product::class);
     }
 
     public function receipts(): HasMany

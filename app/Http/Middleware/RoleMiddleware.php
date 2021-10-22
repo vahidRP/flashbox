@@ -17,7 +17,7 @@ class RoleMiddleware
      */
     public function handle($request, Closure $next, ...$roles)
     {
-        if(!auth()->user()?->hasRole($roles)){
+        if(!auth()->user()?->hasRole($roles, false)){
             abort(Response::HTTP_FORBIDDEN, 'This action is unauthorized.');
         }
 

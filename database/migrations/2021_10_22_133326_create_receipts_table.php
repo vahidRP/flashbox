@@ -16,7 +16,7 @@ class CreateReceiptsTable extends Migration
         Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->index();
-            $table->decimal('total_amount', 15)->default(0);
+            $table->decimal('total_price', 15)->default(0);
             $table->enum('status', \App\Models\Receipt::STATUES)->default(\App\Models\Receipt::STATUES[0]);
             $table->softDeletes();
             $table->timestamps();

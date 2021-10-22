@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Str;
+
 if (! function_exists('_dd')) {
     /**
      * Dump the passed variables and end the script.
@@ -76,5 +78,17 @@ if(!function_exists('camel_case')){
         }
 
         return $camelCache[$value] = lcfirst(studly($value));
+    }
+}
+
+if(!function_exists('route_slug')){
+    function route_slug($string): string
+    {
+        $string = Str::snake($string);
+        $explode = explode('_', $string);
+        $keys = array_keys($explode);
+        $lastKey = end($keys);
+        $explode[$lastKey] = Str::plural($explode[$lastKey]);
+        return implode('-', $explode);
     }
 }

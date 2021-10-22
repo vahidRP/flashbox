@@ -51,6 +51,7 @@ $app->singleton(Illuminate\Contracts\Console\Kernel::class, App\Console\Kernel::
 
 $app->configure('app');
 $app->configure('jwt');
+$app->configure('repositories');
 
 /*
 |--------------------------------------------------------------------------
@@ -92,11 +93,20 @@ $app->register(App\Providers\EventServiceProvider::class);
 
 $app->register(\Illuminate\Redis\RedisServiceProvider::class);
 $app->register(Tymon\JWTAuth\Providers\LumenServiceProvider::class);
+$app->register(\App\Support\Repository\RepositoryServiceProvider::class);
 
 if(env('APP_ENV') === 'local'){
     $app->register(Flipbox\LumenGenerator\LumenGeneratorServiceProvider::class);
     $app->register(Irazasyed\Larasupport\Providers\ArtisanServiceProvider::class);
 }
+
+$app->bind(\App\Repositories\Interfaces\AddressRepositoryInterface::class, \App\Repositories\Eloquent\AddressRepository::class);
+$app->bind(\App\Repositories\Interfaces\PermissionRepositoryInterface::class, \App\Repositories\Eloquent\PermissionRepository::class);
+$app->bind(\App\Repositories\Interfaces\ProductRepositoryInterface::class, \App\Repositories\Eloquent\ProductRepository::class);
+$app->bind(\App\Repositories\Interfaces\ReceiptRepositoryInterface::class, \App\Repositories\Eloquent\ReceiptRepository::class);
+$app->bind(\App\Repositories\Interfaces\RoleRepositoryInterface::class, \App\Repositories\Eloquent\RoleRepository::class);
+$app->bind(\App\Repositories\Interfaces\StoreRepositoryInterface::class, \App\Repositories\Eloquent\StoreRepository::class);
+$app->bind(\App\Repositories\Interfaces\UserRepositoryInterface::class, \App\Repositories\Eloquent\UserRepository::class);
 
 /*
 |--------------------------------------------------------------------------

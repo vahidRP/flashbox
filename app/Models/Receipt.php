@@ -23,14 +23,14 @@ class Receipt extends Model
     /**
      * Different Statuses of the receipt
      */
-    public const STATUES = ['ordering', 'closed'];
+    public const STATUES = ['ordering', 'paying', 'closed'];
 
     /**
      * {@inheritdoc}
      */
     protected $fillable = [
         'user_id',
-        'total_amount',
+        'total_price',
         'status'
     ];
 
@@ -39,7 +39,7 @@ class Receipt extends Model
      */
     protected $casts = [
         'user_id'      => 'integer',
-        'total_amount' => 'decimal:15',
+        'total_price' => 'decimal:15',
     ];
 
     /*=================================================

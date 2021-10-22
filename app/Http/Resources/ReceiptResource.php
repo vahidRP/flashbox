@@ -9,6 +9,10 @@ class ReceiptResource extends Resource
      **/
     public function toArray($request)
     {
-        return $this->resource->toArray();
+        $data = parent::toArray($request);
+
+        $data['products'] = ProductResource::collection($this->whenLoaded('products'));
+
+        return $data;
     }
 }

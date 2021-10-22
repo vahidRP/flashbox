@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api\V1;
 use App\Http\Resources\ReceiptResource;
 use App\Http\Resources\ReceiptsCollection;
 use App\Models\Product;
+use App\Models\User;
 use App\Repositories\Interfaces\ReceiptRepositoryInterface;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 class ReceiptController extends Controller
@@ -19,7 +21,8 @@ class ReceiptController extends Controller
      */
     public function __construct(ReceiptRepositoryInterface $repository)
     {
-        $this->repository = $repository->setResource(ReceiptResource::class)->setCollectionResource(ReceiptsCollection::class);
+        $this->repository = $repository->setResource(ReceiptResource::class)
+            ->setCollectionResource(ReceiptsCollection::class);
     }
 
     /**
@@ -40,7 +43,9 @@ class ReceiptController extends Controller
     protected function validationRules(Request $request, $id = null): array
     {
         return $this->rules([
-
+            'user_id'     => ['required', Rule::exists(User::class, 'id')],
+            'total_price' => ['prohibited'],
+            'status'      => ['prohibited']
         ], $id);
     }
 
@@ -57,7 +62,7 @@ class ReceiptController extends Controller
 
         $inputs = $this->repository->cast($request->all());
         $this->repository->setValidator([
-            'relation' => ['required'],
+            'relation'   => ['required'],
             'related_id' => ['required'],
         ])->validate($inputs);
 
@@ -71,7 +76,7 @@ class ReceiptController extends Controller
             if($product->capacity < 1){
                 return response()->json([
                     'data' => [
-                        'status' => false,
+                        'status'  => false,
                         'message' => 'There is no more product capacity left'
                     ]
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -79,7 +84,7 @@ class ReceiptController extends Controller
             if($model->products->where('id', $relatedId)->first()){
                 return response()->json([
                     'data' => [
-                        'status' => false,
+                        'status'  => false,
                         'message' => 'product attached previously'
                     ]
                 ], Response::HTTP_UNPROCESSABLE_ENTITY);
@@ -118,7 +123,7 @@ class ReceiptController extends Controller
 
         $inputs = $this->repository->cast($request->all());
         $this->repository->setValidator([
-            'relation' => ['required'],
+            'relation'   => ['required'],
             'related_id' => ['required'],
         ])->validate($inputs);
 

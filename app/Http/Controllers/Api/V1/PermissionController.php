@@ -6,6 +6,7 @@ use App\Http\Resources\PermissionResource;
 use App\Http\Resources\PermissionsCollection;
 use App\Repositories\Interfaces\PermissionRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class PermissionController extends Controller
 {
@@ -16,7 +17,8 @@ class PermissionController extends Controller
      */
     public function __construct(PermissionRepositoryInterface $repository)
     {
-        $this->repository = $repository->setResource(PermissionResource::class)->setCollectionResource(PermissionsCollection::class);
+        $this->repository = $repository->setResource(PermissionResource::class)
+            ->setCollectionResource(PermissionsCollection::class);
     }
 
     /**
@@ -24,7 +26,7 @@ class PermissionController extends Controller
      */
     protected function with(): array
     {
-        return [];
+        return ['roles'];
     }
 
     /**
@@ -35,7 +37,8 @@ class PermissionController extends Controller
     protected function validationRules(Request $request, $id = null): array
     {
         return $this->rules([
-
+            'title'    => ['nullable', 'string'],
+            'identity' => ['required', 'string', Rule::unique($this->repository->getModelClassName())->ignore($id)]
         ], $id);
     }
 }

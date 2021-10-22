@@ -9,6 +9,10 @@ class ProductResource extends Resource
      **/
     public function toArray($request)
     {
-        return $this->resource->toArray();
+        $data = parent::toArray($request);
+
+        $data['store'] = new StoreResource($this->whenLoaded('store'));
+
+        return $data;
     }
 }

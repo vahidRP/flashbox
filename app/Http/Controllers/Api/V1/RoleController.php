@@ -6,6 +6,7 @@ use App\Http\Resources\RoleResource;
 use App\Http\Resources\RolesCollection;
 use App\Repositories\Interfaces\RoleRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class RoleController extends Controller
 {
@@ -24,7 +25,7 @@ class RoleController extends Controller
      */
     protected function with(): array
     {
-        return [];
+        return ['permissions'];
     }
 
     /**
@@ -35,7 +36,8 @@ class RoleController extends Controller
     protected function validationRules(Request $request, $id = null): array
     {
         return $this->rules([
-
+            'title'    => ['nullable', 'string'],
+            'identity' => ['required', 'string', Rule::unique($this->repository->getModelClassName())->ignore($id)]
         ], $id);
     }
 }

@@ -9,6 +9,10 @@ class PermissionResource extends Resource
      **/
     public function toArray($request)
     {
-        return $this->resource->toArray();
+        $data = parent::toArray($request);
+
+        $data['roles'] = RoleResource::collection($this->whenLoaded('roles'));
+
+        return $data;
     }
 }

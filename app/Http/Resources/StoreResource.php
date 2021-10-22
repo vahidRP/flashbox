@@ -9,6 +9,11 @@ class StoreResource extends Resource
      **/
     public function toArray($request)
     {
-        return $this->resource->toArray();
+        $data = parent::toArray($request);
+
+        $data['user'] = new UserResource($this->whenLoaded('user'));
+        $data['address'] = new AddressResource($this->whenLoaded('address'));
+
+        return $data;
     }
 }

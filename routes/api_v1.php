@@ -22,16 +22,20 @@ $router->group(['middleware' => ['auth:api', 'throttleWithRedis:120,1']], functi
     });
 
     $router->group(['middleware' => 'role:admin'], function($router){
-
+        // TODO: seller CRUD
     });
 
     $router->group(['middleware' => 'role:seller'], function($router){
-
+        // TODO: products CUD
     });
 
     $router->group(['middleware' => 'role:customer'], function($router){
-
+        // TODO: receipt/add product to receipt
+        // TODO: receipt/pay
+        // TODO: products (Read) -> near stores based on user address lat/lng
     });
+
+
 
 });
 

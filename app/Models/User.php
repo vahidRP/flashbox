@@ -4,12 +4,12 @@ namespace App\Models;
 
 use App\Models\Base\Model;
 use Illuminate\Auth\Authenticatable;
+use Illuminate\Database\Eloquent\Relations\MorphOne;
 use Laravel\Lumen\Auth\Authorizable;
 use App\Models\Pivots\RoleUser;
 use App\Models\Traits\Authorization;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Contracts\Auth\Authenticatable as AuthenticatableContract;
 use Illuminate\Contracts\Auth\Access\Authorizable as AuthorizableContract;
@@ -86,9 +86,9 @@ class User extends Model implements JWTSubject, AuthenticatableContract, Authori
      **************** Relation Methods ****************
      =================================================*/
 
-    public function addresses(): MorphMany
+    public function addresses(): MorphOne
     {
-        return $this->morphMany(Address::class, Address::USERABLE_KEY);
+        return $this->morphOne(Address::class, Address::USERABLE_KEY);
     }
 
     /**

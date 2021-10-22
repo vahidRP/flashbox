@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Base\Model;
 use App\Models\Pivots\RoleUser;
+use App\Models\Traits\Authorization;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
@@ -15,7 +16,7 @@ class User extends Model
      ********************* Traits *********************
      =================================================*/
 
-    use SoftDeletes;
+    use SoftDeletes, Authorization;
 
     /*=================================================
      ******************* Properties *******************
@@ -43,6 +44,13 @@ class User extends Model
     protected $hidden = [
         'password',
         'remember_token',
+    ];
+
+    /**
+     * {@inheritdoc}
+     */
+    protected $with = [
+        'roles.permissions'
     ];
 
     /*=================================================

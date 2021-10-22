@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Models\Base\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Permission extends Model
+class Role extends Model
 {
     /*=================================================
      ********************* Traits *********************

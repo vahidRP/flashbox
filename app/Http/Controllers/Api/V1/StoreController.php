@@ -16,7 +16,8 @@ class StoreController extends Controller
      */
     public function __construct(StoreRepositoryInterface $repository)
     {
-        $this->repository = $repository->setResource(StoreResource::class)->setCollectionResource(StoresCollection::class);
+        $this->repository = $repository->setResource(StoreResource::class)
+            ->setCollectionResource(StoresCollection::class);
     }
 
     /**
@@ -24,7 +25,7 @@ class StoreController extends Controller
      */
     protected function with(): array
     {
-        return [];
+        return ['user', 'address'];
     }
 
     /**
@@ -35,7 +36,8 @@ class StoreController extends Controller
     protected function validationRules(Request $request, $id = null): array
     {
         return $this->rules([
-
+            'user_id' => ['required', 'integer'],
+            'title'   => ['required', 'string'],
         ], $id);
     }
 }

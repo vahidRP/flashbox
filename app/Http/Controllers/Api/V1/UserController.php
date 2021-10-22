@@ -6,6 +6,7 @@ use App\Http\Resources\UserResource;
 use App\Http\Resources\UsersCollection;
 use App\Repositories\Interfaces\UserRepositoryInterface;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class UserController extends Controller
 {
@@ -16,7 +17,8 @@ class UserController extends Controller
      */
     public function __construct(UserRepositoryInterface $repository)
     {
-        $this->repository = $repository->setResource(UserResource::class)->setCollectionResource(UsersCollection::class);
+        $this->repository = $repository->setResource(UserResource::class)
+            ->setCollectionResource(UsersCollection::class);
     }
 
     /**
@@ -24,7 +26,11 @@ class UserController extends Controller
      */
     protected function with(): array
     {
-        return [];
+        return [
+            'address',
+            'roles',
+            'stores'
+        ];
     }
 
     /**
@@ -35,7 +41,9 @@ class UserController extends Controller
     protected function validationRules(Request $request, $id = null): array
     {
         return $this->rules([
-
+            'name'     => ['required'],
+            'email'    => ['required', Rule::unique($this->repository->getModelClassName())->ignore($id)],
+            'password' => ['required']
         ], $id);
     }
 }

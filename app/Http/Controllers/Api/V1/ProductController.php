@@ -22,7 +22,8 @@ class ProductController extends Controller
      */
     public function __construct(ProductRepositoryInterface $repository)
     {
-        $this->repository = $repository->setResource(ProductResource::class)->setCollectionResource(ProductsCollection::class);
+        $this->repository = $repository->setResource(ProductResource::class)
+            ->setCollectionResource(ProductsCollection::class);
     }
 
     /**
@@ -30,7 +31,7 @@ class ProductController extends Controller
      */
     protected function with(): array
     {
-        return [];
+        return ['store'];
     }
 
     /**
@@ -41,7 +42,9 @@ class ProductController extends Controller
     protected function validationRules(Request $request, $id = null): array
     {
         return $this->rules([
-
+            'store_id' => ['prohibited'],
+            'title'    => ['required', 'string'],
+            'price'    => ['required', 'float'],
         ], $id);
     }
 

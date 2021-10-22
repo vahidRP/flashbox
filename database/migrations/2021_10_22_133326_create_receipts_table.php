@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateProductsTable extends Migration
+class CreateReceiptsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,11 @@ class CreateProductsTable extends Migration
      */
     public function up()
     {
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('receipts', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(\App\Models\User::class)->index();
-            $table->string('title')->nullable();
-            $table->unsignedDecimal('price', 15, 4)->default(0);
-            $table->unsignedInteger('capacity')->default(0);
+            $table->decimal('total_amount', 15)->default(0);
+            $table->enum('status', \App\Models\Receipt::STATUES)->default(\App\Models\Receipt::STATUES[0]);
             $table->softDeletes();
             $table->timestamps();
         });
@@ -31,6 +30,6 @@ class CreateProductsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('products');
+        Schema::dropIfExists('receipts');
     }
 }

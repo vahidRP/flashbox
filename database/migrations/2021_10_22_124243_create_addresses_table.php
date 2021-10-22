@@ -20,6 +20,7 @@ class CreateAddressesTable extends Migration
             $table->text('address')->nullable();
             $table->decimal('lng', 10, 8)->nullable();
             $table->decimal('lat', 10, 8)->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

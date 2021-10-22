@@ -2,11 +2,11 @@
 
 namespace App\Policies;
 
-use App\Models\Product;
+use App\Models\Receipt;
 use App\Models\User;
 use Illuminate\Auth\Access\HandlesAuthorization;
 
-class ProductPolicy
+class ReceiptPolicy
 {
     use HandlesAuthorization;
 
@@ -23,7 +23,7 @@ class ProductPolicy
     }
 
     /**
-     * Determine whether the user can view any products.
+     * Determine whether the user can view any receipts.
      *
      * @param  User  $user
      * @return mixed
@@ -34,19 +34,19 @@ class ProductPolicy
     }
 
     /**
-     * Determine whether the user can view the product.
+     * Determine whether the user can view the receipt.
      *
      * @param  User  $user
-     * @param  Product  $product
+     * @param  Receipt  $receipt
      * @return mixed
      */
-    public function view(User $user, Product $product)
+    public function view(User $user, Receipt $receipt)
     {
         //
     }
 
     /**
-     * Determine whether the user can create products.
+     * Determine whether the user can create receipts.
      *
      * @param  User  $user
      * @return mixed
@@ -57,25 +57,25 @@ class ProductPolicy
     }
 
     /**
-     * Determine whether the user can update the product.
+     * Determine whether the user can update the receipt.
      *
      * @param  User  $user
-     * @param  Product  $product
+     * @param  Receipt  $receipt
      * @return mixed
      */
-    public function update(User $user, Product $product)
+    public function update(User $user, Receipt $receipt)
     {
         //
     }
 
     /**
-     * Determine whether the user can delete the product.
+     * Determine whether the user can delete the receipt.
      *
      * @param  User  $user
-     * @param  Product  $product
+     * @param  Receipt  $receipt
      * @return mixed
      */
-    public function delete(User $user, Product $product)
+    public function delete(User $user, Receipt $receipt)
     {
         //
     }
